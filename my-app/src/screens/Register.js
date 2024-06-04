@@ -61,8 +61,10 @@ class Register extends Component {
 
     render(){
         return(
-            <View>
-                <Text>Registra tu usuario</Text>
+            <View style= {styles.container}>
+
+                <Text style= {styles.registrate}>Registra tu usuario</Text>
+
                 <TextInput
                     onChangeText={(text) => this.setState({name: text, error: ''})}
                     value={this.state.name}
@@ -104,21 +106,48 @@ class Register extends Component {
 }
 
 const styles = StyleSheet.create({
-    input: {
-        borderColor: 'red',
-        borderWidth: 1,
-        borderRadius:5,
-        marginBottom:16
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
     },
-    btn:{
-        backgroundColor:'green',
-        textAlign: 'center',
-        padding: 10
+    formContainer: {
+        width: '80%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    input: {
+        width: '50%', 
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 5,
+        paddingLeft: 10,
+        marginBottom: 16,
+    },
+    btn: {
+        width: '50%', 
+        backgroundColor: '#3897f0',
+        borderRadius: 5,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     textBtn: {
-        color: 'white',
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 
+    registrate:{
+        color: '#000',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 16,
     }
-})
+});
+
+
 
 export default Register
