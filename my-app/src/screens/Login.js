@@ -68,7 +68,6 @@ class Login extends Component {
                 value = {this.state.password}
                 />
 
-                {/* submit 'button' */}
                 <TouchableOpacity 
                 style={styles.button} 
                 // crear la funcion onSubmit() ya que no existe en react native, solo en react
@@ -77,7 +76,7 @@ class Login extends Component {
                 </TouchableOpacity>
                 {
                     this.state.error !== '' ?
-                    <Text>
+                    <Text style={styles.error}>
                         {this.state.error}
                     </Text>
                     :
@@ -88,4 +87,36 @@ class Login extends Component {
     }
 }
 
-export default Login
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
+    text: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    },
+    field: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+        marginBottom: 10,
+        width: '80%',
+    },
+    button: {
+        backgroundColor: 'blue',
+        padding: 10,
+        borderRadius: 5,
+        width: '80%',
+        alignItems: 'center',
+    },
+    error: {
+        color: 'red',
+        marginBottom: 10,
+    },
+});
+
+export default Login;
