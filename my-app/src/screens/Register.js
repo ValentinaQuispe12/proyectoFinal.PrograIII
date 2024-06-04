@@ -90,17 +90,31 @@ class Register extends Component {
                     style={styles.btn}
                     onPress={()=> this.onSubmit(this.state.name, this.state.email, this.state.password)}
                 >
-                    <Text style={styles.textBtn}>Registrarme</Text>
+                    <Text style={styles.textBtn}>REGISTRARME</Text>
                 </TouchableOpacity>
-                {
-                    this.state.error !== '' ?
-                    <Text>
-                        {this.state.error}
-                    </Text>
-                    : 
-                    ''
-                }
+               
+            <View style={styles.redirectContainer}>
+                <Text>
+                Ya tienes una cuenta?
+                <TouchableOpacity
+                onPress={()=> this.redirect()}
+                >
+                
+                <Text style={styles.redirectText}> Ingresa aqui</Text>
+
+                </TouchableOpacity>
+                
+                </Text>
+
             </View>
+            { this.state.error !== '' ?
+                            <Text>
+                                {this.state.error}
+                            </Text>
+                            : 
+                            ''
+            }
+                    </View>
         )
     }
 }
@@ -145,7 +159,16 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 16,
-    }
+    },
+
+    redirectContainer: {
+        flexDirection: 'row',
+        marginTop: 16,
+    },
+    redirectText: {
+        color: 'blue',
+        textDecorationLine: 'underline',
+    },
 });
 
 
