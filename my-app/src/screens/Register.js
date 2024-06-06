@@ -43,6 +43,7 @@ class Register extends Component {
         .then((user) => {
             if(user){
                 console.log('usuario registrado')
+                this.props.navigation.navigate("login");
             }
         })
         .catch((err) =>{ 
