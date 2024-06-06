@@ -36,7 +36,9 @@ class Login extends Component {
         //console.log("usuario logueado exitosamente")
         
         auth.signInWithEmailAndPassword(email, password)
-        .then(user => console.log('usuario logueado:', user))
+        .then(user => {
+            this.props.navigation.navigate("tabnav")
+        })
         //.catch(err => console.log(err))
         .catch( err => {
             if(err.code === 'auth/internal-error'){
