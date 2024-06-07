@@ -3,7 +3,8 @@ import Miperfil from "./src/screens/Miperfil";
 
 export default function App() {
   return (
-    <MainNav/>
+    // <MainNav/>
+    <Home/>
   );
 }
 
