@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Text, View } from 'react-native'
 
-export default class Posteo,js extends Component {
+export default class Posteo extends Component {
   render() {
     return (
       <View>
