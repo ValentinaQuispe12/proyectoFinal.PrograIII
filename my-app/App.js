@@ -1,5 +1,6 @@
 import MainNav from "./src/navigation/MainNav";
-import Home from "./src/screens/Home";
+import Miperfil from "./src/screens/Miperfil";
+
 export default function App() {
   return (
     <MainNav/>
