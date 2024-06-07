@@ -1,122 +1,130 @@
-import React, { Component } from 'react'
-import { Text, View, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
-import {auth} from "../firebase/config"
+import React, { Component } from 'react';
+import { Text, View, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { auth, db } from "../firebase/config";
 
 class Register extends Component {
-    constructor(props){
-        super(props)
+    constructor(props) {
+        super(props);
         this.state = {
             name:'',
             password:'',
             email:'',
-            error: ''
-        }
+            error: '',
+            loading: false ,
+            miniBio:'',
+            fotoPerfil: ''
+        };
     }
 
-    componentDidMount(){
-        console.log("hizo el didMount y estas son sus props")
-        console.log(this.props)
-    }
+    onSubmit = () => {
+        const { name, email, password} = this.state;
 
-    onSubmit(name, email, password){
-        if(
-            name === null || name === '' || name.length < 5
-        ){
-            this.setState({error: 'El name no puede ser menor de 5 caracteres'})
-            return false
+        // Validación de campos
+        if (name === null || name === '' || name.length < 5) {
+            this.setState({ error: 'El nombre debe tener al menos 5 caracteres', loading: false });
+            return;
         }
-        if(
-            email === null || email === '' || !email.includes('@')
-        ){
-            this.setState({error: 'El email tiene un formato invalido'})
-            return false
+        if (email === null || email === '' || !email.includes('@')) {
+            this.setState({ error: 'Ingrese un correo electrónico válido', loading: false });
+            return;
         }
-        if(
+        if (password === null || password === '' || password.length < 6) {
+            this.setState({ error: 'La contraseña debe tener al menos 6 caracteres', loading: false });
+            return;
+        }
 
-            password === null || password === '' || password.length < 6
-        ){
-            this.setState({error: 'La password no puede ser menor de 6 caracteres'})
-            return false
-        }
+        // Iniciar el proceso de registro
+        this.setState({ loading: true, error: '' });
 
         auth.createUserWithEmailAndPassword(email, password)
-        .then((user) => {
-            if(user){
-                console.log('usuario registrado')
-                this.props.navigation.navigate("login");
-            }
-        })
-        .catch((err) =>{ 
-            if(err.code === "auth/email-already-in-use"){
-                this.setState({error:'El email ya se encuentra en uso'})
-            }
-        })
+            .then(resp => {
+                db.collection('users').add({
+                    owner: email,
+                    name: name,
+                    miniBio: this.state.miniBio,
+                    fotoPerfil: this.state.fotoPerfil,
+                    createdAt: Date.now()
+                })
+                .then(() => {
+                    this.setState({
+                        name: '',
+                        email: '',
+                        password: '',
+                        loading: false
+                    });
+                    this.props.navigation.navigate("login");
+                })
+            })
+            .catch(err => this.setState({ error: err.message, loading: false }));
+    };
 
+    redirect = () => {
+        this.props.navigation.navigate("login");
+    };
 
+    render() {
+        const { name, email, password, miniBio, FotoPerfil, loading, error } = this.state;
 
-    }
-
-    redirect(){
-        this.props.navigation.navigate("login")
-    }
-
-    render(){
-        return(
-            <View style= {styles.container}>
-
-                <Text style= {styles.registrate}>Registra tu usuario</Text>
-
+        return (
+            <View style={styles.container}>
+                <Text style={styles.registrate}>Registra tu usuario</Text>
                 <TextInput
-                    onChangeText={(text) => this.setState({name: text, error: ''})}
-                    value={this.state.name}
+                    onChangeText={(text) => this.setState({ name: text, error: '' })}
+                    value={name}
                     placeholder='Indica tu nombre'
                     keyboardType='default'
                     style={styles.input}
                 />
                 <TextInput
-                    onChangeText={(text) => this.setState({email: text, error: ''})}
-                    value={this.state.email}
+                    onChangeText={(text) => this.setState({ email: text, error: '' })}
+                    value={email}
                     placeholder='Indica tu email'
-                    keyboardType='default'
+                    keyboardType='email-address'
                     style={styles.input}
                 />
                 <TextInput
-                    onChangeText={(text) => this.setState({password: text, error: ''})}
-                    value={this.state.password}
-                    placeholder='Indica tu password'
+                    onChangeText={(text) => this.setState({ password: text, error: '' })}
+                    value={password}
+                    placeholder='Indica tu contraseña'
                     keyboardType='default'
+                    secureTextEntry={true}
                     style={styles.input}
                 />
+
+                <TextInput
+                    style={styles.input}
+                    onChangeText={(text)=>this.setState({miniBio: text})}
+                    placeholder='miniBio'
+                    keyboardType='default'
+                    value={this.state.miniBio}
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={(text)=>this.setState({fotoPerfil: text})}
+                    placeholder='fotoPerfil'
+                    keyboardType='default'
+                    value={this.state.fotoPerfil}
+                    />
                 <TouchableOpacity
                     style={styles.btn}
-                    onPress={()=> this.onSubmit(this.state.name, this.state.email, this.state.password)}
+                    onPress={this.onSubmit}
+                    Onpress={loading}
                 >
-                    <Text style={styles.textBtn}>REGISTRARME</Text>
+                    {loading ? (
+                        <ActivityIndicator color="#fff" />
+                    ) : (
+                        <Text style={styles.textBtn}>REGISTRARME</Text>
+                    )}
                 </TouchableOpacity>
-               
-            <View style={styles.redirectContainer}>
-                <Text>
-                Ya tienes una cuenta?
-                <TouchableOpacity
-                onPress={()=> this.redirect()}
-                >
-                
-                <Text style={styles.redirectText}> Ingresa aqui</Text>
-
-                </TouchableOpacity>
-                
-                </Text>
-
+                <View style={styles.redirectContainer}>
+                    <Text>¿Ya tienes una cuenta?</Text>
+                    <TouchableOpacity onPress={this.redirect}>
+                        <Text style={styles.redirectText}> Ingresa aquí</Text>
+                    </TouchableOpacity>
+                </View>
+                {error !== '' && <Text style={styles.errorMsg}>{error}</Text>}
             </View>
-            { this.state.error !== '' ?
-                            <Text>
-                                {this.state.error}
-                            </Text>
-                            : 
-                            ''
-            }
-                    </View>
-        )
+        );
     }
 }
 
@@ -127,13 +135,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#fff',
     },
-    formContainer: {
-        width: '80%',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     input: {
-        width: '50%', 
+        width: '80%',
         height: 40,
         borderColor: '#ccc',
         borderWidth: 1,
@@ -142,7 +145,7 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     btn: {
-        width: '50%', 
+        width: '80%',
         backgroundColor: '#3897f0',
         borderRadius: 5,
         height: 40,
@@ -154,14 +157,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
-
-    registrate:{
+    registrate: {
         color: '#000',
         fontSize: 16,
         fontWeight: 'bold',
         marginBottom: 16,
     },
-
     redirectContainer: {
         flexDirection: 'row',
         marginTop: 16,
@@ -170,8 +171,10 @@ const styles = StyleSheet.create({
         color: 'blue',
         textDecorationLine: 'underline',
     },
+    errorMsg: {
+        color: 'red',
+        marginTop: 10,
+    },
 });
 
-
-
-export default Register
+export default Register;

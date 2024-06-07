@@ -10,10 +10,10 @@ export default class Home extends Component{
         }
     }
 
-    componentDidMount(){
+  /*   componentDidMount(){
         db.collection()
     }
-
+ */
     render(){
         return(
             <View>
