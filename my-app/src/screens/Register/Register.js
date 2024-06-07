@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { Text, View, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { auth, db } from "../firebase/config";
+import { auth, db } from "../../firebase/config";
 
 class Register extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name:'',
-            password:'',
-            email:'',
+            name: '',
+            password: '',
+            email: '',
             error: '',
-            loading: false ,
-            miniBio:'',
+            loading: false,
+            miniBio: '',
             fotoPerfil: ''
         };
     }
 
     onSubmit = () => {
-        const { name, email, password} = this.state;
+        const { name, email, password } = this.state;
 
         // Validación de campos
         if (name === null || name === '' || name.length < 5) {
@@ -33,7 +33,6 @@ class Register extends Component {
             return;
         }
 
-        // Iniciar el proceso de registro
         this.setState({ loading: true, error: '' });
 
         auth.createUserWithEmailAndPassword(email, password)
@@ -63,7 +62,7 @@ class Register extends Component {
     };
 
     render() {
-        const { name, email, password, miniBio, FotoPerfil, loading, error } = this.state;
+        const { name, email, password, miniBio, fotoPerfil, loading, error } = this.state;
 
         return (
             <View style={styles.container}>
@@ -90,25 +89,24 @@ class Register extends Component {
                     secureTextEntry={true}
                     style={styles.input}
                 />
-
                 <TextInput
                     style={styles.input}
-                    onChangeText={(text)=>this.setState({miniBio: text})}
-                    placeholder='miniBio'
+                    onChangeText={(text) => this.setState({ miniBio: text })}
+                    placeholder='Mini bio'
                     keyboardType='default'
                     value={this.state.miniBio}
                 />
                 <TextInput
                     style={styles.input}
-                    onChangeText={(text)=>this.setState({fotoPerfil: text})}
-                    placeholder='fotoPerfil'
+                    onChangeText={(text) => this.setState({ fotoPerfil: text })}
+                    placeholder='Foto de perfil'
                     keyboardType='default'
                     value={this.state.fotoPerfil}
-                    />
+                />
                 <TouchableOpacity
                     style={styles.btn}
                     onPress={this.onSubmit}
-                    Onpress={loading}
+                    disabled={loading}
                 >
                     {loading ? (
                         <ActivityIndicator color="#fff" />
@@ -133,43 +131,52 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: 'rgb(146, 205, 147)', // Fondo color
+        padding: 20,
     },
     input: {
         width: '80%',
         height: 40,
         borderColor: '#ccc',
         borderWidth: 1,
-        borderRadius: 5,
-        paddingLeft: 10,
+        borderRadius: 25,
+        paddingLeft: 15,
         marginBottom: 16,
+        backgroundColor: '#fff',
     },
     btn: {
         width: '80%',
-        backgroundColor: '#3897f0',
-        borderRadius: 5,
-        height: 40,
+        backgroundColor: '#93CD93', // Botón color
+        borderRadius: 25,
+        height: 45,
         justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
     },
     textBtn: {
-        color: '#fff',
+        color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
     },
     registrate: {
         color: '#000',
-        fontSize: 16,
+        fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 16,
+        marginBottom: 20,
     },
     redirectContainer: {
         flexDirection: 'row',
-        marginTop: 16,
+        marginTop: 20,
     },
     redirectText: {
-        color: 'blue',
+        color: '#0066cc',
         textDecorationLine: 'underline',
+        marginLeft: 5,
     },
     errorMsg: {
         color: 'red',

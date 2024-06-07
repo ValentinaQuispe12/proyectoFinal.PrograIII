@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Register from "../screens/Register"
-import Login from "../screens/Login"
+import Register from "../screens/Register/Register"
+import Login from "../screens/Login/Login"
 import TabNav from './TabNav'
 
 

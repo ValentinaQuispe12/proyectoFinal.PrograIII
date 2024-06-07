@@ -1,6 +1,6 @@
 import { FlatList, Text, View } from "react-native"
 import React, { Component } from 'react'
-import { db } from '../firebase/config'
+import { db } from '../../firebase/config'
 
 
 export default class Home extends Component {
@@ -34,7 +34,7 @@ export default class Home extends Component {
                 keyExtractor= {(item)=> item.id.toString()}
                 renderItem= {({item})=>
                 <View> 
-                    <Text> hola</Text>
+                    <Text> hola home</Text>
                 </View>
             }
                 />
