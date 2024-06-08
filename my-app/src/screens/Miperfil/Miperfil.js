@@ -4,48 +4,71 @@ import { auth, db } from '../../firebase/config';
 import Post from "../Post/Post"; 
 
 class Miperfil extends Component {
-    constructor(){
+    constructor() {
         super();
         this.state = {
             userPost: [],
         };
     }
 
-    componentDidMount(){
+    componentDidMount() {
         db.collection("posteos").where("owner", "==", auth.currentUser.email)
-        .onSnapshot((docs) => {
-            let postObtenidos = [];
-            docs.forEach(doc => {
-                postObtenidos.push({
-                    id: doc.id,
-                    data: doc.data()
+            .orderBy("owner", "asc")
+            .onSnapshot((docs) => {
+                let postObtenidos = [];
+                docs.forEach(doc => {
+                    postObtenidos.push({
+                        id: doc.id,
+                        data: doc.data()
+                    });
+                });
+                this.setState({
+                    userPost: postObtenidos
                 });
             });
-            this.setState({
-                userPost: postObtenidos
-            });
-        });
     }
 
     logout() {
         auth.signOut()
-        .then(() => {
-            this.props.navigation.navigate("login");
-        })
-        .catch(e => {
-            console.log(e);
-        });
+            .then(() => {
+                this.props.navigation.navigate("login");
+            })
+            .catch(e => {
+                console.log(e);
+            });
     }
 
-    render(){
-        return(
+    deletePost = 
+    (postId) => {
+        db.collection("posteos")
+        .doc(postId)
+        .delete()
+            .then(() => {
+                console.log("Post eliminado con éxito");
+                this.setState({
+                    userPost: this.state.userPost.filter(post => post.id !== postId)
+                });
+            })
+            .catch(error => {
+                console.error("Error al eliminar el post: ", error);
+            });
+    }
+
+    render() {
+        return (
             <View style={styles.contenedorPrin}>
                 <FlatList
                     data={this.state.userPost}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => 
                         <View style={styles.postItem}>
-                            <Text> {item.data.pie}</Text>
+                            <Text>{item.data.pie}</Text>
+                            <TouchableOpacity 
+                                style={styles.deleteButton} 
+                                onPress={() => this.deletePost(item.id)}
+                            >
+                                <Text style={styles.deleteButtonText}>Eliminar</Text>
+                            </TouchableOpacity>
                         </View>
                     }
                 />
@@ -53,14 +76,14 @@ class Miperfil extends Component {
                     <Text style={styles.buttonText}>LOGOUT</Text>
                 </TouchableOpacity>
             </View>
-        )
+        );
     }
 }
 
 const styles = StyleSheet.create({
     contenedorPrin: {
         flex: 1,
-        backgroundColor: 'rgb(146, 205, 147)', // fondo color
+        backgroundColor: 'rgb(146, 205, 147)', 
         padding: 20,
     },
     postItem: {
@@ -73,9 +96,12 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 5,
         elevation: 3,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     button: {
-        backgroundColor: '#93CD93', // botón color
+        backgroundColor: '#93CD93', 
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderRadius: 25,
@@ -91,7 +117,17 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         fontSize: 16,
-    }
+    },
+    deleteButton: {
+        backgroundColor: '#FF6961', 
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 5,
+    },
+    deleteButtonText: {
+        color: 'white',
+        fontWeight: 'bold',
+    },
 });
 
 export default Miperfil;
