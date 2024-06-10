@@ -47,7 +47,6 @@ class Miperfil extends Component {
 
     }
  
-
     render() {
         return (
             <View style={styles.contenedorPrin}>

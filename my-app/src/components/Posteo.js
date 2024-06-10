@@ -5,7 +5,7 @@ class Posteo extends Component {
     constructor(props){
         super(props)
         this.state = {
-            estaMiComentario: false,
+            estaMiLike: "",
         }
     }
 
