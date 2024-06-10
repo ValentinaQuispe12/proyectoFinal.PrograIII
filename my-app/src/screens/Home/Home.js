@@ -34,7 +34,7 @@ export default class Home extends Component {
                 data= {this.state.posteos}
                 keyExtractor= {(item)=> item.id.toString()}
                 renderItem= {({item})=>
-                <Posteo post = {item}/>
+                <Posteo navigation={this.props.navigation} post = {item}/>
             }
                 />
                 

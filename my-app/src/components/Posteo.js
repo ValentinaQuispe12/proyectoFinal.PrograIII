@@ -20,7 +20,7 @@ class Posteo extends Component {
 
     return (
       <View>
-        <TouchableOpacity  onPress= {()=> navigation.navigate("DetalleUsuario", {email:this.props.data.owner})}>
+        <TouchableOpacity  onPress= {()=> this.props.navigation.navigate("detalleusuario", {email:this.props.post.data.owner})}>
           <Text> {this.props.post.data.owner}</Text>
         </TouchableOpacity>
          
