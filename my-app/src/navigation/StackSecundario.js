@@ -10,8 +10,8 @@ export default class StackSecundario extends Component {
     return (
     
         <Stack.Navigator>
-                   <Stack.Screen name="Home" component={Home}  options={{ headerShown: false }} />
-                   <Stack.Screen name="DetalleUsuario" component={DetalleUsuario}  options={{ headerShown: false }} />
+                   <Stack.Screen name="home" component={Home}  options={{ headerShown: false }} />
+                   <Stack.Screen name="detalleusuario" component={DetalleUsuario}  options={{ headerShown: false }} />
 
         </Stack.Navigator>
     )

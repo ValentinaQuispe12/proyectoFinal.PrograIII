@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native
 import { db } from '../../firebase/config'; 
 
 class DetalleUsuario extends Component{
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             usuario: [],
             posteosDelUsuarioSeleccionado: []
@@ -12,6 +12,7 @@ class DetalleUsuario extends Component{
     }
 
     componentDidMount(){
+        console.log('props', this.props)
         db.collection('users').where('owner', '==', 'mica@gmail.com').onSnapshot(
             docs => {
                 let users = [];
@@ -36,7 +37,7 @@ class DetalleUsuario extends Component{
                     })
                 this.setState({
                     posteosDelUsuarioSeleccionado: posts,
-                })
+                }, () => console.log('state en la screen de perfil usuario', posts))
                 })
             }
         )
