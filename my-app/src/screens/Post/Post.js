@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
 import { Text, View, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
 import { db, auth } from '../../firebase/config'
+import Camara from '../../components/Camara'
 
 export default class Post extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            pie: ''
+            pie: '',
+            imgurl: '',
         }
     }
     onSubmit(pie) {
@@ -15,7 +17,7 @@ export default class Post extends Component {
                 pie: pie,
                 owner: auth.currentUser.email,
                 createdAt: Date.now(),
-                imageUrl: '',
+                imageUrl: this.state.imgurl,
                 likes: [],
                 comments: [],
             })
@@ -29,9 +31,19 @@ export default class Post extends Component {
                 .catch((err) => console.log(err))
         }
     }
+    actualizarimg(url){
+        this.setState({
+            imgurl: url
+        })
+    }
     render() {
         return (
-            <View>
+            <View style={styles.contenedor}>
+                {
+                    this.state.imgurl == '' ?
+                    <Camara actualizarimg={(url)=> this.actualizarimg(url)} /> :
+                    <>
+               
                 <TextInput
                     placeholder='Escribe un gran pie para tu nuevo post...'
                     value={this.state.pie}
@@ -39,14 +51,19 @@ export default class Post extends Component {
                     style={styles.input}
                 />
                 <TouchableOpacity onPress={() => this.onSubmit(this.state.pie)}>
-                    <text> Subi tu post!</text>
+                    <Text> Subi tu post!</Text>
                 </TouchableOpacity>
+                </>
+                 }
             </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
+    contenedor:{
+        flex:1
+    },
     input: {
         borderColor: "#93CD93",
         borderWidth: 1

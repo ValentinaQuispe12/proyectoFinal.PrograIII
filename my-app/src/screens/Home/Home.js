@@ -34,7 +34,7 @@ export default class Home extends Component {
                 keyExtractor= {(item)=> item.id.toString()}
                 renderItem= {({item})=>
                 <View> 
-                    <Text> hola home</Text>
+                    <Text> {item.data.pie} </Text>
                 </View>
             }
                 />

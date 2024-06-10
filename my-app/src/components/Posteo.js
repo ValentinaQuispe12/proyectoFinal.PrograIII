@@ -1,30 +1,37 @@
-import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { Component } from 'react'
+import { Text, View, Image, StyleSheet, PushNotificationIOS } from 'react-native'
+import { auth, db } from '../firebase/config'
+import Camara from './Camara'
 
 class Posteo extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            estaMiComentario: false,
-        }
-    }
+  constructor(props){
+    super(props)
+  }
 
-    render() {
-        return (
-            <View style={styles.postContainer}>
-                <Text style={styles.postText}>
-                    {this.props.posteo.data.pie}
-                </Text>
-                <TouchableOpacity
+  onImageUpload(url){
+    this.setState({
+      url:url
+    })
+  }
+  
+  render() {
+    return (
+      <View>
+        <Image source={{uri: this.props.post.data.imageUrl}}
+            style={styles.imgPost}
+        />
+        <Text> {this.props.post.data.pie}</Text>
+        <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => this.props.borrarPosteo(this.props.posteo.id)}
                 >
                     <Text style={styles.deleteButtonText}>Borrar Posteo</Text>
                 </TouchableOpacity>
-            </View>
-        );
-    }
+      </View>
+    )
+  }
 }
+
 
 const styles = StyleSheet.create({
     postContainer: {
@@ -57,6 +64,10 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
+    imgPost:{
+      height: 200,
+      width: '100%'
+    }
 });
 
 export default Posteo;
