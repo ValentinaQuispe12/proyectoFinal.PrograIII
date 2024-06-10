@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { FlatList, Text, View, TouchableOpacity } from 'react-native'
+import { FlatList, TextInput, View, TouchableOpacity, StyleSheet, Text } from 'react-native'
 import {db, auth} from "../../firebase/config"
 import firebase from "firebase"
 
@@ -14,19 +14,21 @@ class Comments extends Component {
   }
   
   componentDidMount(){
+    console.log('props', this.props)
     db.collection("posteos")
-    .doc(idPosteo)
+    .doc(this.props.route.params.id)
     .onSnapshot(doc => {
+      console.log('antes del setState, comments', doc.data().comments)
       this.setState({
-        comentario:doc.data().comments
-      }, () => console.log(this.state.comentario))
+       arrComments:doc.data().comments
+      }, ()=> console.log(this.state))
     })
 
   }
   
   enviarComentario(comentario){
     db.collection("posteos")
-    .doc(idPosteo)
+    .doc(this.props.route.params.id)
     .update({
       comments: firebase.firestore.FieldValue.arrayUnion({
         owner: auth.currentUser.email,
@@ -69,5 +71,12 @@ class Comments extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  input:{
+    height:32,
+    borderWidth:1
+  }
+})
 
 export default Comments;

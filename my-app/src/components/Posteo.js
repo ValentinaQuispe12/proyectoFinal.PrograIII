@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Text, View, Image, StyleSheet, PushNotificationIOS, TouchableOpacity } from 'react-native'
 import { auth, db } from '../firebase/config'
 import Camara from './Camara'
-import Comments from '../screens/Comments/Comments'
 
 class Posteo extends Component {
   constructor(props){
@@ -23,6 +22,11 @@ class Posteo extends Component {
         <TouchableOpacity  onPress= {()=> this.props.navigation.navigate("detalleusuario", {email:this.props.post.data.owner})}>
           <Text> {this.props.post.data.owner}</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity  onPress= {()=> this.props.navigation.navigate("comments", {id: this.props.post.id})}>
+          <Text> Agregar comentario</Text>
+        </TouchableOpacity>
+         
          
         <Image source={{uri: this.props.post.data.imageUrl}}
             style={styles.imgPost}
