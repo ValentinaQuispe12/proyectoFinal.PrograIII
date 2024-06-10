@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, Image, StyleSheet, PushNotificationIOS } from 'react-native'
+import { Text, View, Image, StyleSheet, PushNotificationIOS, TouchableOpacity } from 'react-native'
 import { auth, db } from '../firebase/config'
 import Camara from './Camara'
 
@@ -7,16 +7,21 @@ class Posteo extends Component {
   constructor(props){
     super(props)
   }
-
   onImageUpload(url){
     this.setState({
       url:url
     })
   }
-  
+
   render() {
+  console.log(this.props);
+
     return (
       <View>
+        <TouchableOpacity  onPress= {()=> navigation.navigate("DetalleUsuario", {email:this.props.data.owner})}>
+          <Text> {this.props.post.data.owner}</Text>
+        </TouchableOpacity>
+         
         <Image source={{uri: this.props.post.data.imageUrl}}
             style={styles.imgPost}
         />
@@ -27,6 +32,7 @@ class Posteo extends Component {
                 >
                     <Text style={styles.deleteButtonText}>Borrar Posteo</Text>
                 </TouchableOpacity>
+                
       </View>
     )
   }

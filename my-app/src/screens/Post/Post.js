@@ -11,6 +11,7 @@ export default class Post extends Component {
             imgurl: '',
         }
     }
+
     onSubmit(pie) {
         if (pie != '') {
             db.collection('posteos').add({
@@ -23,7 +24,8 @@ export default class Post extends Component {
             })
                 .then((resp) => {
                     this.setState({
-                        pie: ''
+                        pie: '',
+                        imgurl: ''
                     },
                         () => this.props.navigation.navigate('home')
                     )
