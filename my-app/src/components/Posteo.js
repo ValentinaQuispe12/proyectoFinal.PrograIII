@@ -1,35 +1,43 @@
 import React, { Component } from 'react'
-import { Text, View, Image, StyleSheet, } from 'react-native'
+import { Text, View, Image, StyleSheet, PushNotificationIOS, TouchableOpacity } from 'react-native'
 import { auth, db } from '../firebase/config'
 import Camara from './Camara'
+import Comments from '../screens/Comments/Comments'
 
 class Posteo extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            estaMiLike: "",
-        }
-    }
- 
+  constructor(props){
+    super(props)
+  }
   onImageUpload(url){
     this.setState({
       url:url
     })
   }
-  
+
+ 
   render() {
+  console.log(this.props);
+
     return (
       <View>
+        <TouchableOpacity  onPress= {()=> navigation.navigate("DetalleUsuario", {email:this.props.data.owner})}>
+          <Text> {this.props.post.data.owner}</Text>
+        </TouchableOpacity>
+         
         <Image source={{uri: this.props.post.data.imageUrl}}
             style={styles.imgPost}
         />
         <Text> {this.props.post.data.pie}</Text>
+
         <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => this.props.borrarPosteo(this.props.posteo.id)}
                 >
                     <Text style={styles.deleteButtonText}>Borrar Posteo</Text>
                 </TouchableOpacity>
+
+     
+                
       </View>
     )
   }

@@ -1,6 +1,7 @@
-import { FlatList, Text, View } from "react-native"
+import { FlatList, Text, View, StyleSheet } from "react-native"
 import React, { Component } from 'react'
 import { db } from '../../firebase/config'
+import Posteo from "../../components/Posteo"
 
 
 export default class Home extends Component {
@@ -28,17 +29,22 @@ export default class Home extends Component {
 
     render() {
         return (
-            <View>
+            <View style={styles.contenedor}>
                 <FlatList
                 data= {this.state.posteos}
                 keyExtractor= {(item)=> item.id.toString()}
                 renderItem= {({item})=>
-                <View> 
-                    <Text> {item.data.pie} </Text>
-                </View>
+                <Posteo post = {item}/>
             }
                 />
+                
             </View>
         )
     }
 }
+
+const styles = StyleSheet.create({
+    contenedor:{
+        flex: 1
+    }
+})

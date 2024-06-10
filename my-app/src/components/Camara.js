@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native'
-import { Camera } from 'expo-camera'
+import { Camera } from 'expo-camera/legacy'
 import {storage, auth} from '../firebase/config'
 
 export default class Camara extends Component {
@@ -22,7 +22,7 @@ export default class Camara extends Component {
     // metodo para tomar la imagen
     tomarImagen(){
         this.metodosCamara.takePictureAsync()
-        .Then((urlTemp)=> this.setState({urlTempo: urlTemp.uri}))
+        .then((urlTemp)=> this.setState({urlTempo: urlTemp.uri}))
         .catch((err)=> console.log(err))
     }
 
