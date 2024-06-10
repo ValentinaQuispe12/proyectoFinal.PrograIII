@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { auth, db } from '../../firebase/config';
-import Post from "../Post/Post"; 
+import Posteo from '../../components/Posteo';
 
 class Miperfil extends Component {
     constructor() {
@@ -38,21 +38,15 @@ class Miperfil extends Component {
             });
     }
 
-    deletePost = 
-    (postId) => {
+    borrarPosteo(idPosteo){
         db.collection("posteos")
-        .doc(postId)
+        .doc(idPosteo)
         .delete()
-            .then(() => {
-                console.log("Post eliminado con éxito");
-                this.setState({
-                    userPost: this.state.userPost.filter(post => post.id !== postId)
-                });
-            })
-            .catch(error => {
-                console.error("Error al eliminar el post: ", error);
-            });
+        .then((res)=>console.log(res))
+        .catch(e=>console.log(e))
+
     }
+ 
 
     render() {
         return (
@@ -61,15 +55,8 @@ class Miperfil extends Component {
                     data={this.state.userPost}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => 
-                        <View style={styles.postItem}>
-                            <Text>{item.data.pie}</Text>
-                            <TouchableOpacity 
-                                style={styles.deleteButton} 
-                                onPress={() => this.deletePost(item.id)}
-                            >
-                                <Text style={styles.deleteButtonText}>Eliminar</Text>
-                            </TouchableOpacity>
-                        </View>
+                      
+                         <View>  <Posteo borrarPosteo={(idPosteo)=> this.borrarPosteo(idPosteo)}   posteo={item} />    </View>
                     }
                 />
                 <TouchableOpacity style={styles.button} onPress={() => this.logout()}>
