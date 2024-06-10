@@ -13,7 +13,6 @@ class Miperfil extends Component {
 
     componentDidMount() {
         db.collection("posteos").where("owner", "==", auth.currentUser.email)
-            .orderBy("owner", "asc")
             .onSnapshot((docs) => {
                 let postObtenidos = [];
                 docs.forEach(doc => {
@@ -22,6 +21,7 @@ class Miperfil extends Component {
                         data: doc.data()
                     });
                 });
+                console.log('post obtenidos', postObtenidos)
                 this.setState({
                     userPost: postObtenidos
                 });
@@ -51,14 +51,19 @@ class Miperfil extends Component {
     render() {
         return (
             <View style={styles.contenedorPrin}>
-                <FlatList
-                    data={this.state.userPost}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => 
-                      
-                         <View>  <Posteo borrarPosteo={(idPosteo)=> this.borrarPosteo(idPosteo)}   posteo={item} />    </View>
-                    }
-                />
+                {
+                    this.state.userPost.length > 0 ? 
+                    <FlatList
+                        data={this.state.userPost}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => 
+                          
+                             <View>  <Posteo borrarPosteo={(idPosteo)=> this.borrarPosteo(idPosteo)}   post={item} />    </View>
+                        }
+                    />
+                    :
+                    <Text>Este usuario no tiene posteos</Text>
+                }
                 <TouchableOpacity style={styles.button} onPress={() => this.logout()}>
                     <Text style={styles.buttonText}>LOGOUT</Text>
                 </TouchableOpacity>
