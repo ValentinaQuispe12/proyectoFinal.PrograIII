@@ -1,44 +1,48 @@
-import React, { Component } from 'react'
-import { FlatList, TextInput, View, TouchableOpacity, StyleSheet, Text } from 'react-native'
-import { db, auth } from "../../firebase/config"
-import firebase from "firebase"
+import React, { Component } from 'react';
+import { FlatList, TextInput, View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { db, auth } from "../../firebase/config";
+import firebase from "firebase";
 
 class Comments extends Component {
-  constructor(props){
-    super(props)
-    this.state={
+  constructor(props) {
+    super(props);
+    this.state = {
       arrComments: [],
       comentario: "",
-    }
+    };
   }
 
-  componentDidMount(){
-    console.log('props', this.props)
+  componentDidMount() {
+    console.log('props', this.props);
     db.collection("posteos")
-    .doc(this.props.route.params.id)
-    .onSnapshot(doc => {
-      console.log('antes del setState, comments', doc.data().comments)
-      this.setState({
-       arrComments: doc.data().comments
-      }, ()=> console.log(this.state))
-    })
+      .doc(this.props.route.params.id)
+      .onSnapshot(doc => {
+        console.log('antes del setState, comments', doc.data().comments);
+        this.setState({
+          arrComments: doc.data().comments,
+        }, () => console.log(this.state));
+      });
   }
 
-  enviarComentario(comentario){
+  enviarComentario(comentario) {
     db.collection("posteos")
-    .doc(this.props.route.params.id)
-    .update({
-      comments: firebase.firestore.FieldValue.arrayUnion({
-        owner: auth.currentUser.email,
-        createdAt: Date.now(),
-        comment: comentario
+      .doc(this.props.route.params.id)
+      .update({
+        comments: firebase.firestore.FieldValue.arrayUnion({
+          owner: auth.currentUser.email,
+          createdAt: Date.now(),
+          comment: comentario,
+        }),
       })
-    })
-    .catch(err=>console.log(err))
-    
+      .catch(err => console.log(err));
+
     this.setState({
-      comentario: ""
-    })
+      comentario: "",
+    });
+  }
+
+  regresar() {
+    this.props.navigation.navigate("home");
   }
 
   render() {
@@ -61,9 +65,12 @@ class Comments extends Component {
           <TouchableOpacity style={styles.button} onPress={() => this.enviarComentario(this.state.comentario)}>
             <Text style={styles.buttonText}>Enviar Comentario</Text>
           </TouchableOpacity>
+          <TouchableOpacity style={styles.returnButton} onPress={() => this.regresar()}>
+            <Text style={styles.returnButtonText}>Regresar</Text>
+          </TouchableOpacity>
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -104,11 +111,22 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
+    marginBottom: 10,
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
   },
-})
+  returnButton: {
+    backgroundColor: '#92CD93',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  returnButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+});
 
 export default Comments;

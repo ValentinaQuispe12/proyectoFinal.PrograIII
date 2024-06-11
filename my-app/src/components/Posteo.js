@@ -29,7 +29,7 @@ class Posteo extends Component {
           /></View>
         <Text style={styles.postText}> {this.props.post.data.pie}</Text>
         <TouchableOpacity onPress={() => this.props.navigation.navigate("comments", { id: this.props.post.id })}>
-          <Text> Agregar comentario</Text>
+          <Text style={styles.mandarComent}> Agregar comentario</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
@@ -89,6 +89,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
   },
+
+  mandarComent: {
+    backgroundColor: '#92CD93',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+
 });
 
 
