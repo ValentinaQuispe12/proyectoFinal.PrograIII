@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Text, View, Image, StyleSheet, PushNotificationIOS, TouchableOpacity } from 'react-native'
 import { auth, db } from '../firebase/config'
 import Camara from './Camara'
+import { FontAwesome } from '@expo/vector-icons';
 
 class Posteo extends Component {
   constructor(props){
@@ -17,20 +18,20 @@ class Posteo extends Component {
   console.log(this.props);
 
     return (
-      <View>
+      <View style = {styles.postContainer}>
         <TouchableOpacity  onPress= {()=> this.props.navigation.navigate("detalleusuario", {email:this.props.post.data.owner})}>
-          <Text> {this.props.post.data.owner}</Text>
+          <Text style = {styles.ownerText}> {this.props.post.data.owner}</Text>
         </TouchableOpacity>
-         
+        <View style={styles.imageContainer}>
         <Image source={{uri: this.props.post.data.imageUrl}}
             style={styles.imgPost}
-        />
-        <Text> {this.props.post.data.pie}</Text>
+        /></View>
+        <Text style = {styles.postText}> {this.props.post.data.pie}</Text>
         <TouchableOpacity
                     style={styles.deleteButton}
                     onPress={() => this.props.borrarPosteo(this.props.posteo.id)}
                 >
-                    <Text style={styles.deleteButtonText}>Borrar Posteo</Text>
+                    <Text style={styles.deleteButtonText}><FontAwesome name="trash" size={24} color='#FF6961'/></Text>
                 </TouchableOpacity>
                 
       </View>
@@ -38,42 +39,54 @@ class Posteo extends Component {
   }
 }
 
-
 const styles = StyleSheet.create({
-    postContainer: {
-        backgroundColor: 'white',
-        padding: 10,
-        marginVertical: 5,
-        borderRadius: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    postText: {
-        flex: 1,
-        color: 'black',
-        fontSize: 16,
-    },
-    deleteButton: {
-        backgroundColor: '#FF6961',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderRadius: 5,
-        marginLeft: 10,
-    },
-    deleteButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
-    },
-    imgPost:{
-      height: 200,
-      width: '100%'
-    }
+  postContainer: {
+      backgroundColor: 'white',
+      padding: 15,
+      marginVertical: 10,
+      borderRadius: 10,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.2,
+      shadowRadius: 5,
+      elevation: 5,
+      overflow: 'hidden', // Para asegurar que los bordes redondeados se muestren correctamente
+  },
+  ownerText: {
+      fontWeight: 'bold',
+      color: '#555',
+      marginBottom: 5,
+      fontSize: 16,
+  },
+  imageContainer: {
+      aspectRatio: 1, // Asegura que el contenedor de la imagen tenga una relación de aspecto 1:1 (cuadrado)
+      marginBottom: 10,
+      overflow: 'hidden',
+      borderRadius: 100, // Hace que el contenedor de la imagen sea redondo
+  },
+  imgPost: {
+      flex: 1,
+      width: '100%',
+      height: '100%', // Ocupa todo el espacio disponible dentro del contenedor
+  },
+  postText: {
+      color: '#333',
+      fontSize: 16,
+      marginBottom: 10,
+  },
+  deleteButton: {
+      backgroundColor: "#92CD93",
+      paddingHorizontal: 15,
+      paddingVertical: 10,
+      borderRadius: 5,
+      alignSelf: 'flex-end',
+  },
+  deleteButtonText: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 14,
+  },
 });
+
 
 export default Posteo;
