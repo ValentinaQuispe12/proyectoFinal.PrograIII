@@ -52,7 +52,11 @@ class Comments extends Component {
         <FlatList
           data={this.state.arrComments}
           keyExtractor={item => item.createdAt.toString()}
-          renderItem={({ item }) => <Text style={styles.comment}>{item.comment}</Text>}
+          renderItem={({ item }) => (
+            <View style={styles.commentBox}>
+              <Text style={styles.comment}>{item.comment}</Text>
+            </View>
+          )}
         />
         <View style={styles.inputContainer}>
           <TextInput
@@ -87,12 +91,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
   },
-  comment: {
-    padding: 10,
+  commentBox: {
+    backgroundColor: '#A4D4AE',  
+    padding: 15,
+    borderRadius: 10,
     marginVertical: 5,
-    backgroundColor: '#92CD93',
-    borderRadius: 5,
+    borderColor: '#38761D',  
+    borderWidth: 1,
+  },
+  comment: {
     color: '#fff',
+    fontSize: 16,  
   },
   inputContainer: {
     marginTop: 20,
