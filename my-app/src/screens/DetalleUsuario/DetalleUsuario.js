@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { db } from '../../firebase/config'; 
 
 class DetalleUsuario extends Component{
@@ -12,55 +12,72 @@ class DetalleUsuario extends Component{
     }
 
     componentDidMount(){
-        console.log('props', this.props)
-        db.collection('users').where('owner', '==', 'mica@gmail.com').onSnapshot(
+        console.log('props', this.props.route.params.email)
+
+        db.collection('users').where('owner', '==', this.props.route.params.email).onSnapshot(
             docs => {
                 let users = [];
-                docs.forEach( docs => {
+                docs.forEach( doc => {
                     users.push({
-                        id: docs.id,
-                        data: docs.data()
+                        id: doc.id,
+                        data: doc.data()
                     })
+                  console.log(users);  
                 this.setState({
                     usuario: users,
-                })
+                }, () => console.log('log extendido', this.state))
                 })
             }
         )
-        db.collection('posteos').where('owner', '==', 'mica@gmail.com').onSnapshot(
+
+        db.collection('posteos').where('owner', '==', this.props.route.params.email).onSnapshot(
             docs => {
                 let posts = [];
-                docs.forEach( docs => {
+                docs.forEach( doc => {
                     posts.push({
-                        id: docs.id,
-                        data: docs.data()
+                        id: doc.id,
+                        data: doc.data()
                     })
+                  console.log(posts);  
                 this.setState({
                     posteosDelUsuarioSeleccionado: posts,
-                }, () => console.log('state en la screen de perfil usuario', posts))
+                }, () => console.log('log extendido', this.state))
                 })
             }
         )
+
     }
 
     render(){
+        
         return(
             <View>
-                {/* foto de perfil seleccionado desde la home */}
-                {/* nombre del perfil seleccionado */}
-                <Text>{console.log(this.state.usuario)}</Text>
+                {/* foto de perfil seleccionado */}
+                {this.state.usuario.length !== 0 ? <Text>{this.state.usuario[0].data.fotoPerfil}</Text> : <Text>error</Text>}
 
                 {/* bio del perfil seleccionado */}
+                {this.state.usuario.length !== 0 ? <Text>{this.state.usuario[0].data.miniBio}</Text> : <Text>error</Text>}
+                
+                {/* nombre del perfil seleccionado */}
+                {this.state.usuario.length !== 0 ? <Text>{this.state.usuario[0].data.name}</Text> : <Text>error</Text>}
+                
 
                 {/* lista con los posteos de ese usuario seleccionado 
                 (hacer una validacion de que el usuario seleccionado sea igual al que esta relacionado en la coleccion de posteos)
                 flatlist para recorrer todos los posteos del usuario seleccionado*/}
                 <FlatList
-                data = { this.state.posteosDelUsuarioSeleccionado }
+                data = { this.state.posteosDelUsuarioSeleccionado}
                 keyExtractor = { item => item.id.toString() }
-                // renderItem = { ({item}) => <View>{item.}</View>}
-                renderItem = { ({item}) => console.log(item)}
+                renderItem = { ({item}) => 
+                    <View>
+                        <Text>{item.data.imageUrl}</Text>
+                        <Text>{item.data.pie}</Text>
+                        {/* traer los comments y likes */}
+                    </View>
+                }
+                // renderItem = { ({item}) => console.log('flatlist', item.data)}
                 />
+
             </View>
         )
     }
