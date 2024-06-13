@@ -19,26 +19,29 @@ class Comments extends Component {
       .onSnapshot(doc => {
         console.log('antes del setState, comments', doc.data().comments);
         this.setState({
-          arrComments: doc.data().comments,
+          arrComments: doc.data().comments.sort((a, b) => b.createdAt - a.createdAt),
         }, () => console.log(this.state));
       });
   }
 
   enviarComentario(comentario) {
+    const newComment = {
+      owner: auth.currentUser.email,
+      createdAt: Date.now(),
+      comment: comentario,
+    };
+
     db.collection("posteos")
       .doc(this.props.route.params.id)
       .update({
-        comments: firebase.firestore.FieldValue.arrayUnion({
-          owner: auth.currentUser.email,
-          createdAt: Date.now(),
-          comment: comentario,
-        }),
+        comments: firebase.firestore.FieldValue.arrayUnion(newComment),
+      })
+      .then(() => {
+        this.setState({
+          comentario: "",
+        });
       })
       .catch(err => console.log(err));
-
-    this.setState({
-      comentario: "",
-    });
   }
 
   regresar() {
