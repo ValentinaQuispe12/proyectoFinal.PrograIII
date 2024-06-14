@@ -37,28 +37,33 @@ class Buscador extends Component {
             usuario.data.owner.toLowerCase().includes(this.state.valorInput.toLowerCase()))
         return (
             <View style={styles.container}>
-                <Image  style={styles.img} source={require('../../../assets/logo.jpg')} />
+                <Image style={styles.img} source={require('../../../assets/logo.jpg')} />
                 <TextInput
                     style={styles.input}
                     placeholder="busca el usuario que quieras"
                     value={this.state.valorInput}
                     onChangeText={(text) => this.setState({ valorInput: text })}
                 />
-                <FlatList
-                    data={usuariosEncontrados}
-                    keyExtractor={(user) => user.id}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            style={styles.userItem}
-                            onPress={() => this.usuarioElegido(item.data.owner)}
-                        >
 
-                            <View>
-                                <Text style={styles.userName} >{item.data.name}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                />
+                {usuariosEncontrados.length === 0 ?
+                    
+                    <Text> No hay usuarios que coincidan con tu busqueda </Text>
+                    :
+                    <FlatList
+                        data={usuariosEncontrados}
+                        keyExtractor={(user) => user.id}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                style={styles.userItem}
+                                onPress={() => this.usuarioElegido(item.data.owner)}
+                            >
+
+                                <View>
+                                    <Text style={styles.userName} >{item.data.name}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        )}
+                    />}
             </View>
         )
     }
@@ -74,7 +79,7 @@ const styles = StyleSheet.create({
     img: {
         height: 70,
         width: 70,
-        marginBottom: 20, 
+        marginBottom: 20,
     },
     input: {
         height: 40,
