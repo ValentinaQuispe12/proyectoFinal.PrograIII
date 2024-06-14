@@ -13,7 +13,9 @@ export default class Home extends Component {
     }
 
     componentDidMount() {
-        db.collection('posteos').onSnapshot((docs) => {
+        db.collection('posteos')
+        .orderBy('createdAt', 'desc')
+        .onSnapshot((docs) => {
             let posteosObtenidos = []
             docs.forEach(doc => {
                 posteosObtenidos.push({
@@ -56,16 +58,16 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'rgb(146, 205, 147)',
         padding: 10,
-        alignItems: 'center', // Centra horizontalmente
+        alignItems: 'center', 
     },
     img: {
         height: 70,
         width: 70,
-        marginBottom: 20, // Añadir margen inferior para separarlo de la lista
+        marginBottom: 20, 
     },
     flatList: {
         flex: 1,
-        width: '100%', // Asegura que la lista ocupe todo el ancho disponible
+        width: '100%', 
     },
     posteo: {
         backgroundColor: '#93CD93',

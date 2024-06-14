@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, TextInput, View, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { FlatList, TextInput, View, TouchableOpacity, StyleSheet, Text, Image } from 'react-native';
 import { db, auth } from "../../firebase/config";
 import firebase from "firebase";
 
@@ -45,12 +45,13 @@ class Comments extends Component {
   }
 
   regresar() {
-    this.props.navigation.navigate("home");
+    this.props.navigation.navigate("home"), { id: this.props.post.id };
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <Image  style={styles.img} source={require('../../../assets/logo.jpg')} />
         <Text style={styles.title}>COMENTARIOS</Text>
         <FlatList
           data={this.state.arrComments}
@@ -87,6 +88,11 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: 'rgb(146, 205, 147)',
   },
+  img: {
+    height: 70,
+    width: 70,
+    marginBottom: 20, 
+},
   title: {
     fontSize: 24,
     fontWeight: 'bold',
