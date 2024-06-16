@@ -80,9 +80,7 @@ class Miperfil extends Component {
                             data={this.state.userPost}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) =>
-
-                                <View>  <Posteo borrarPosteo={(idPosteo) => this.borrarPosteo(idPosteo)} post={item} />    </View>
-                            }
+                         <View>  <Posteo borrarPosteo={(idPosteo) => this.borrarPosteo(idPosteo)} post={item} />  </View>}
                         />
                         :
                         <Text>Este usuario no tiene posteos</Text>

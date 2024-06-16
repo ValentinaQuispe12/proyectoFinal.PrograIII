@@ -35,7 +35,7 @@ class Posteo extends Component {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => this.props.borrarPosteo(this.props.posteo.id)}
+          onPress={(idPosteo) => this.props.borrarPosteo(this.props.post.id)}
         >
           <Text style={styles.deleteButtonText}><FontAwesome name="trash" size={24} color='#FF6961' /></Text>
         </TouchableOpacity>
