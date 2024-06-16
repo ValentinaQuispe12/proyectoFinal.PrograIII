@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import { db } from '../../firebase/config'; 
 
 class DetalleUsuario extends Component{
@@ -52,6 +52,7 @@ class DetalleUsuario extends Component{
         
         return(
             <View>
+                <Image  style={styles.img} source={require('../../../assets/logo.jpg')} />
                 {/* foto de perfil seleccionado */}
                 {this.state.usuario.length !== 0 ? <Text>{this.state.usuario[0].data.fotoPerfil}</Text> : <Text>error</Text>}
 
@@ -82,4 +83,14 @@ class DetalleUsuario extends Component{
         )
     }
 }
+
 export default DetalleUsuario
+
+const styles = StyleSheet.create({
+    img: {
+      height: 70,
+      width: 70,
+      marginBottom: 20, 
+  }
+})
+

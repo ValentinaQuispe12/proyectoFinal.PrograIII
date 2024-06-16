@@ -28,7 +28,9 @@ class Posteo extends Component {
             style={styles.imgPost}
           /></View>
         <Text style={styles.postText}> {this.props.post.data.pie}</Text>
+        <Text style={styles.postText2}> La cantidad de comentarios es {this.props.post.data.comments.length}</Text>
         <TouchableOpacity onPress={() => this.props.navigation.navigate("comments", { id: this.props.post.id })}>
+
           <Text style={styles.mandarComent}> Agregar comentario</Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -74,6 +76,11 @@ const styles = StyleSheet.create({
   },
   postText: {
     color: '#333',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  postText2: {
+    color: '#92CD93',
     fontSize: 16,
     marginBottom: 10,
   },
