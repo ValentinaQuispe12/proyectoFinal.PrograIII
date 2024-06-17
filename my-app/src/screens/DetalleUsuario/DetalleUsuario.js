@@ -82,4 +82,7 @@ class DetalleUsuario extends Component{
         )
     }
 }
+
+// CSS
+
 export default DetalleUsuario
