@@ -55,45 +55,87 @@ export default class Camara extends Component {
                     this.state.dioPermiso ?
                         this.state.urlTempo === '' ?
                         <>
+                            <View style={styles.cameraWrapper}>
                             <Camera
                                 type={Camera.Constants.Type.back}
                                 style={styles.camara}
                                 ref = {(metodos) => this.metodosCamara = metodos}
-                            /> 
-                            <TouchableOpacity onPress={()=> this.tomarImagen()}>
-                                <Text>Tomar foto</Text>
+                            /> </View>
+                            <TouchableOpacity 
+                            style={styles.button}
+                            onPress={()=> this.tomarImagen()}>
+                                <Text style={styles.buttonText}>Tomar foto</Text>
                             </TouchableOpacity> </>
                             :
                             <>
-                                <Image
-                                    style={styles.imagen}
+                                <Image style={styles.imagen}
                                     source={{uri: this.state.urlTempo}}
                                 />
-                                <TouchableOpacity onPress={()=> this.guardarImagen()}>
-                                    <Text>Aceptar foto</Text>
+                                <TouchableOpacity style={styles.button} onPress={()=> this.guardarImagen()}>
+                                    <Text style={styles.buttonText}>Aceptar foto</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity  onPress={()=> this.descartarImagen()}>
-                                    <Text>Rechazar foto</Text>
+                                <TouchableOpacity style={styles.button}  onPress={()=> this.descartarImagen()}>
+                                    <Text style={styles.buttonText}>Rechazar foto</Text>
                                 </TouchableOpacity>
                             </>
                         :
-                        <Text> Tenes que dar permiso para usar la camara </Text>                    
+                        <Text style={styles.buttonText}> Tenes que dar permiso para usar la camara </Text>                    
                 }
             </View>
         )
     }
 }
+
+
 const styles = StyleSheet.create({
     contenedor: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'rgb(146, 205, 147)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
     },
     camara: {
-        height: 400
+        height: 400,
+        width: '100%',
+        borderRadius: 10,
+        overflow: 'hidden',
+        marginBottom: 20,
+    },
+    cameraWrapper: {
+        width: 300,
+        height: 300,
+        borderRadius: 150,
+        overflow: 'hidden',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
     },
     imagen: {
-        height: 400
-    }
-
-})
+        height: 300,
+        width: 300,
+        borderRadius: 150,
+        marginBottom: 20,
+    },
+    button: {
+        backgroundColor: '#93CD93',
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        marginBottom: 10,
+        alignItems: 'center',
+        width: '80%',
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+});
 
 

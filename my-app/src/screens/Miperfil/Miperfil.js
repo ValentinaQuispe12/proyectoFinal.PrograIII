@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
 import { auth, db } from '../../firebase/config';
+import { getAuth, deleteUser } from "firebase/auth";
 import Posteo from '../../components/Posteo';
 
 class Miperfil extends Component {
@@ -38,33 +39,57 @@ class Miperfil extends Component {
             });
     }
 
-    borrarPosteo(idPosteo){
+
+    borrarPosteo(idPosteo) {
         db.collection("posteos")
-        .doc(idPosteo)
-        .delete()
-        .then((res)=>console.log(res))
-        .catch(e=>console.log(e))
+            .doc(idPosteo)
+            .delete()
+            .then((res) => console.log(res))
+            .catch(e => console.log(e))
 
     }
- 
+
+    deletearUsuario(id) {
+        const user = auth.currentUser;
+
+        // Eliminar los documentos del usuario en la colección 'users'
+        db.collection('users').doc(id).delete()
+            .then(() => {
+                // Eliminar el usuario de Firebase Authentication
+                user.delete()
+                    .then(() => {
+                        console.log('User deleted.');
+                        this.props.navigation.navigate("login");
+                    })
+                    .catch((error) => {
+                        console.log('Error deleting user:', error);
+                    });
+            })
+            .catch((error) => {
+                console.log('Error deleting user document:', error);
+            });
+    }
+
     render() {
         return (
             <View style={styles.contenedorPrin}>
+                <Image style={styles.img} source={require('../../../assets/logo.jpg')} />
                 {
-                    this.state.userPost.length > 0 ? 
-                    <FlatList
-                        data={this.state.userPost}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item }) => 
-                          
-                             <View>  <Posteo borrarPosteo={(idPosteo)=> this.borrarPosteo(idPosteo)}   post={item} />    </View>
-                        }
-                    />
-                    :
-                    <Text>Este usuario no tiene posteos</Text>
+                    this.state.userPost.length > 0 ?
+                        <FlatList
+                            data={this.state.userPost}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) =>
+                         <View>  <Posteo borrarPosteo={(idPosteo) => this.borrarPosteo(idPosteo)} post={item} />  </View>}
+                        />
+                        :
+                        <Text>Este usuario no tiene posteos</Text>
                 }
                 <TouchableOpacity style={styles.button} onPress={() => this.logout()}>
                     <Text style={styles.buttonText}>LOGOUT</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => (this.deletearUsuario())(this.props.navigation.navigate("home"))}>
+                    <Text style={styles.buttonText}>DELETE PROFILE</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -74,8 +99,13 @@ class Miperfil extends Component {
 const styles = StyleSheet.create({
     contenedorPrin: {
         flex: 1,
-        backgroundColor: 'rgb(146, 205, 147)', 
+        backgroundColor: 'rgb(146, 205, 147)',
         padding: 20,
+    },
+    img: {
+        height: 70,
+        width: 70,
+        marginBottom: 20,
     },
     postItem: {
         backgroundColor: 'white',
@@ -92,7 +122,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        backgroundColor: '#93CD93', 
+        backgroundColor: '#93CD93',
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderRadius: 25,
@@ -110,7 +140,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     deleteButton: {
-        backgroundColor: '#FF6961', 
+        backgroundColor: '#FF6961',
         paddingHorizontal: 10,
         paddingVertical: 5,
         borderRadius: 5,
