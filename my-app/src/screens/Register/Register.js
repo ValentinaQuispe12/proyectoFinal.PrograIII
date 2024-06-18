@@ -114,12 +114,14 @@ class Register extends Component {
                         <Text style={styles.textBtn}>REGISTRARME</Text>
                     )}
                 </TouchableOpacity>
+
                 <View style={styles.redirectContainer}>
                     <Text>¿Ya tienes una cuenta?</Text>
                     <TouchableOpacity onPress={this.redirect}>
                         <Text style={styles.redirectText}> Ingresa aquí</Text>
                     </TouchableOpacity>
                 </View>
+                
                 {error !== '' && <Text style={styles.errorMsg}>{error}</Text>}
             </View>
         );
