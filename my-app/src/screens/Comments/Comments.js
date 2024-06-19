@@ -61,8 +61,10 @@ class Comments extends Component {
               data={this.state.arrComments}
               keyExtractor={item => item.createdAt.toString()}
               renderItem={({ item }) => (
+                
                 <View style={styles.commentBox}>
-                  <Text style={styles.comment}>{item.comment}</Text>
+                  {console.log('item', item)}
+                  <Text style={styles.comment}>{item.owner} : {item.comment}</Text>
                 </View>
               )}
             />
