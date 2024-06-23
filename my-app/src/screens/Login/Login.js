@@ -30,11 +30,10 @@ class Login extends Component {
         if(
             password === null || password === ''
         ){
-            this.setState({error: 'el password no puede ser menor a 8 caracteres'}) // hay q cambiar esto
+            this.setState({error: 'la password es invalida'})
             return false
         }
-        //console.log("usuario logueado exitosamente")
-        
+                
         auth.signInWithEmailAndPassword(email, password)
         .then(user => {
             this.props.navigation.navigate("tabnav")
@@ -50,7 +49,7 @@ class Login extends Component {
     render(){
         return(
             <View style={styles.container}> 
-                <Text style={styles.text}>Login</Text>
+                <Text style={styles.login}>Login</Text>
                 {/* email field */}
                 <TextInput style={styles.field}
                 keyboardType = 'email-address'
@@ -70,12 +69,22 @@ class Login extends Component {
                 value = {this.state.password}
                 />
 
+                {/* simil boton de login */}
                 <TouchableOpacity 
                 style={styles.button} 
                 // crear la funcion onSubmit() ya que no existe en react native, solo en react
                 onPress ={() => this.onSubmit(this.state.email, this.state.password)}> 
                     <Text style={styles.text}>Loguearme</Text>
                 </TouchableOpacity>
+
+
+                <View style={styles.redirectContainer}>
+                    <Text>¿No tienes una cuenta?</Text>
+                    <TouchableOpacity onPress={ () => this.props.navigation.navigate("register")}>
+                        <Text style={styles.redirectText}> Hazte una aqui</Text>
+                    </TouchableOpacity>
+                </View>
+
                 {
                     this.state.error !== '' ?
                     <Text style={styles.error}>
@@ -84,6 +93,7 @@ class Login extends Component {
                     :
                     ''
                 }
+
             </View>
         )
     }
@@ -94,26 +104,47 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+        backgroundColor: 'rgb(146, 205, 147)',
+        padding: 20,
     },
-    text: {
-        fontSize: 20,
+    login: {
+        color: '#000',
+        fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
     },
     field: {
-        borderWidth: 1,
-        borderColor: 'gray',
-        padding: 10,
-        marginBottom: 10,
         width: '80%',
+        height: 40,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 25,
+        paddingLeft: 15,
+        marginBottom: 16,
+        backgroundColor: '#fff',
     },
     button: {
-        backgroundColor: 'blue',
-        padding: 10,
-        borderRadius: 5,
         width: '80%',
+        backgroundColor: '#93CD93', // Botón color
+        borderRadius: 25,
+        height: 45,
+        justifyContent: 'center',
         alignItems: 'center',
+        marginTop: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
+    },
+    redirectContainer: {
+        flexDirection: 'row',
+        marginTop: 20,
+    },
+    redirectText: {
+        color: '#0066cc',
+        textDecorationLine: 'underline',
+        marginLeft: 5,
     },
     error: {
         color: 'red',
@@ -122,3 +153,4 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
+

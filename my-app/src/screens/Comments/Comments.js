@@ -19,7 +19,7 @@ class Comments extends Component {
       .onSnapshot(doc => {
         console.log('antes del setState, comments', doc.data().comments);
         this.setState({
-          arrComments: doc.data().comments.sort((a, b) => b.createdAt - a.createdAt),
+          arrComments: doc.data().comments ? doc.data().comments.sort((a, b) => b.createdAt - a.createdAt) : [],
         }, () => console.log(this.state));
       });
   }
@@ -51,17 +51,25 @@ class Comments extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Image  style={styles.img} source={require('../../../assets/logo.jpg')} />
+        <Image style={styles.img} source={require('../../../assets/logo.jpg')} />
         <Text style={styles.title}>COMENTARIOS</Text>
-        <FlatList
-          data={this.state.arrComments}
-          keyExtractor={item => item.createdAt.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.commentBox}>
-              <Text style={styles.comment}>{item.comment}</Text>
-            </View>
-          )}
-        />
+        {
+          this.state.arrComments.length === 0 ? (
+            <Text style={styles.noCommentsText}>Aún no hay comentarios</Text>
+          ) : (
+            <FlatList
+              data={this.state.arrComments}
+              keyExtractor={item => item.createdAt.toString()}
+              renderItem={({ item }) => (
+                
+                <View style={styles.commentBox}>
+                  {console.log('item', item)}
+                  <Text style={styles.comment}>{item.owner} : {item.comment}</Text>
+                </View>
+              )}
+            />
+          )
+        }
         <View style={styles.inputContainer}>
           <TextInput
             placeholder="Escribi tu comentario"
@@ -92,7 +100,7 @@ const styles = StyleSheet.create({
     height: 70,
     width: 70,
     marginBottom: 20, 
-},
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -111,6 +119,12 @@ const styles = StyleSheet.create({
   comment: {
     color: '#fff',
     fontSize: 16,  
+  },
+  noCommentsText: {
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+    marginVertical: 20,
   },
   inputContainer: {
     marginTop: 20,

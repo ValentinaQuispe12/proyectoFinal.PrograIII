@@ -1,14 +1,15 @@
 import { Component } from "react";
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { auth, db } from '../../firebase/config'
+import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Image, Picker } from "react-native";
+import { auth, db } from '../../firebase/config';
 
 class Buscador extends Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             valorInput: '',
             usuariosMostrados: [],
-        }
+            campoFiltrado: 'name' // Agregar estado para el campo de filtrado
+        };
     }
 
     componentDidMount() {
@@ -18,37 +19,47 @@ class Buscador extends Component {
                 data.push({
                     id: doc.id,
                     data: doc.data()
-                })
-            })
+                });
+            });
             this.setState({
                 usuariosMostrados: data
-            })
-        })
+            });
+        });
     }
 
     usuarioElegido(owner) {
-        owner === auth.currentUser.owner ?
-            this.props.navigation.navigate('detalleusuario') :
-            this.props.navigation.navigate('miperfil')
+        if (owner === auth.currentUser.email) {
+            this.props.navigation.navigate('miperfil');
+        } else {
+            this.props.navigation.navigate('detalleusuario', { email: owner }); // Pasar el email a DetalleUsuario
+        }
     }
 
     render() {
         const usuariosEncontrados = this.state.usuariosMostrados.filter((usuario) =>
-            usuario.data.owner.toLowerCase().includes(this.state.valorInput.toLowerCase()))
+            usuario.data[this.state.campoFiltrado]?.toLowerCase().includes(this.state.valorInput.toLowerCase())
+        );
+
         return (
             <View style={styles.container}>
                 <Image style={styles.img} source={require('../../../assets/logo.jpg')} />
+                <Picker
+                    selectedValue={this.state.campoFiltrado}
+                    onValueChange={(itemValue) => this.setState({ campoFiltrado: itemValue })}
+                    style={styles.picker}
+                >
+                    <Picker.Item label="Nombre" value="name" />
+                    <Picker.Item label="Email" value="owner" />
+                </Picker>
                 <TextInput
                     style={styles.input}
-                    placeholder="busca el usuario que quieras"
+                    placeholder={`Busca por ${this.state.campoFiltrado}`}
                     value={this.state.valorInput}
                     onChangeText={(text) => this.setState({ valorInput: text })}
                 />
-
-                {usuariosMostrados.length === 0 ?
-                    
-                    <Text> No hay usuarios que coincidan con tu busqueda </Text>
-                    :
+                {usuariosMostrados.length === 0 ? (
+                    <Text>No hay usuarios que coincidan con tu búsqueda</Text>
+                ) : (
                     <FlatList
                         data={usuariosEncontrados}
                         keyExtractor={(user) => user.id}
@@ -57,18 +68,17 @@ class Buscador extends Component {
                                 style={styles.userItem}
                                 onPress={() => this.usuarioElegido(item.data.owner)}
                             >
-
                                 <View>
-                                    <Text style={styles.userName} >{item.data.name}</Text>
+                                    <Text style={styles.userName}>{item.data.name}</Text>
                                 </View>
                             </TouchableOpacity>
                         )}
-                    />}
+                    />
+                )}
             </View>
-        )
+        );
     }
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -88,14 +98,19 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         marginBottom: 20,
         borderRadius: 5,
-        backgroundColor: '#92CD93', // Color de fondo llamativo
-        color: '#ffffff', // Color del texto
-        fontWeight: 'bold', // Texto en negrita
+        backgroundColor: '#92CD93',
+        color: '#ffffff',
+        fontWeight: 'bold',
         shadowColor: '#000',
         shadowOpacity: 0.2,
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 2,
         elevation: 5,
+    },
+    picker: {
+        height: 50,
+        width: 150,
+        marginBottom: 20,
     },
     userItem: {
         padding: 15,
@@ -114,4 +129,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Buscador
+export default Buscador;

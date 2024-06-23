@@ -1,13 +1,45 @@
 import React, { Component } from 'react'
-import { Text, View, Image, StyleSheet, PushNotificationIOS, TouchableOpacity } from 'react-native'
-import { auth, db } from '../firebase/config'
+import { Text, View, Image, StyleSheet, TouchableOpacity } from 'react-native'
 import Camara from './Camara'
 import { FontAwesome } from '@expo/vector-icons';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+
+import { auth, db } from '../firebase/config'
+import firebase from 'firebase'
+
 
 class Posteo extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      estaMiLike: false
+    }
   }
+
+  componentDidMount() {
+    console.log('data', this.props.post.id, 'auth', auth.currentUser)
+    let estaMiLike = this.props.post.data.likes.includes(auth.currentUser.email)
+    if (estaMiLike){
+      this.setState({estaMiLike: true})
+    } 
+  }
+  
+  like() {
+    db.collection('posteos').doc(this.props.post.id).update({
+      likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+    })
+    .then( () => this.setState({estaMiLike: true}) )
+    .catch( (err) => console.log(err) )
+  }
+  
+  unlike() {
+    db.collection('posteos').doc(this.props.post.id).update({
+        likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+    })
+    .then( () => this.setState({estaMiLike: false}) )
+    .catch( (err) => console.log(err) )
+  }
+  
 
   onImageUpload(url) {
     this.setState({
@@ -26,16 +58,38 @@ class Posteo extends Component {
         <View style={styles.imageContainer}>
           <Image source={{ uri: this.props.post.data.imageUrl }}
             style={styles.imgPost}
-          /></View>
+          />
+        </View>
         <Text style={styles.postText}> {this.props.post.data.pie}</Text>
-        <Text style={styles.postText2}> La cantidad de comentarios es {this.props.post.data.comments.length}</Text>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate("comments", { id: this.props.post.id })}>
 
-          <Text style={styles.mandarComent}> Agregar comentario</Text>
+        <View style={styles.buttons}>
+        {/* Boton de like */}
+        <View style={styles.likesContainer}>
+        { this.state.estaMiLike ?
+        <TouchableOpacity onPress={ () => this.unlike() } > 
+          <FontAwesome  name= 'heart'  color = {'#92CD93'}  size = {24}/>
         </TouchableOpacity>
+        :
+        <TouchableOpacity onPress={ () => this.like() } > 
+          <FontAwesome  name= 'heart-o'  color = {'#92CD93'}  size = {24}/>
+        </TouchableOpacity>
+        }
+        <Text style={styles.likesNum}> {this.props.post.data.likes.length} </Text>
+        </View>
+
+        {/* Comentarios*/}
+        <View style={styles.commentsContainer}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate("comments", { id: this.props.post.id })}>
+          <FontAwesome5 name="comment" size={26} color="#92CD93" />
+          <Text style={styles.commentsNum}> {this.props.post.data.comments.length} </Text>
+        </TouchableOpacity>
+        </View>
+        </View>
+
+        {/* Boton para borrar posteo */}
         <TouchableOpacity
           style={styles.deleteButton}
-          onPress={() => this.props.borrarPosteo(this.props.posteo.id)}
+          onPress={(idPosteo) => this.props.borrarPosteo(this.props.post.id)}
         >
           <Text style={styles.deleteButtonText}><FontAwesome name="trash" size={24} color='#FF6961' /></Text>
         </TouchableOpacity>
@@ -79,10 +133,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 10,
   },
-  postText2: {
+  commentsContainer:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 20,
+  },
+  commentsNum: {
     color: '#92CD93',
-    fontSize: 16,
-    marginBottom: 10,
+    marginLeft: 5,
+    //fontSize: 16,
   },
   deleteButton: {
     backgroundColor: "#92CD93",
@@ -96,7 +155,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 14,
   },
-
   mandarComent: {
     backgroundColor: '#92CD93',
     padding: 10,
@@ -107,6 +165,18 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  likesContainer:{
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  likesNum:{
+    color: '#92CD93',
+    marginLeft: 5, 
+  },
+  buttons:{
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
 });
