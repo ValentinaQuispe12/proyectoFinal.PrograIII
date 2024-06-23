@@ -30,7 +30,7 @@ class Login extends Component {
         if(
             password === null || password === ''
         ){
-            this.setState({error: 'el password no puede ser menor a 8 caracteres'}) // hay q cambiar esto
+            this.setState({error: 'la password es invalida'})
             return false
         }
                 
@@ -69,12 +69,14 @@ class Login extends Component {
                 value = {this.state.password}
                 />
 
+                {/* simil boton de login */}
                 <TouchableOpacity 
                 style={styles.button} 
                 // crear la funcion onSubmit() ya que no existe en react native, solo en react
                 onPress ={() => this.onSubmit(this.state.email, this.state.password)}> 
                     <Text style={styles.text}>Loguearme</Text>
                 </TouchableOpacity>
+
 
                 <View style={styles.redirectContainer}>
                     <Text>¿No tienes una cuenta?</Text>
@@ -151,3 +153,4 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
+
