@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
 import { auth, db } from '../../firebase/config';
-import { getAuth, deleteUser } from "firebase/auth";
 import Posteo from '../../components/Posteo';
 
 class Miperfil extends Component {
@@ -9,6 +8,8 @@ class Miperfil extends Component {
         super();
         this.state = {
             userPost: [],
+            idUsuario: null,
+            usuario: null,
         };
     }
 
@@ -27,6 +28,16 @@ class Miperfil extends Component {
                     userPost: postObtenidos
                 });
             });
+
+        db.collection('users').where('owner', '==', auth.currentUser.email)
+            .onSnapshot(data => {
+                data.forEach(doc => {
+                    this.setState({ 
+                        usuario: doc.data(), 
+                        idUsuario: doc.id 
+                    });
+                });
+            });
     }
 
     logout() {
@@ -39,14 +50,12 @@ class Miperfil extends Component {
             });
     }
 
-
     borrarPosteo(idPosteo) {
         db.collection("posteos")
             .doc(idPosteo)
             .delete()
             .then((res) => console.log(res))
             .catch(e => console.log(e))
-
     }
 
     deletearUsuario(id) {
@@ -68,24 +77,45 @@ class Miperfil extends Component {
     }
 
     render() {
+        const { usuario, userPost } = this.state;
+
         return (
             <View style={styles.contenedorPrin}>
                 <Image style={styles.img} source={require('../../../assets/logo.jpg')} />
-                {
-                    this.state.userPost.length > 0 ?
-                        <FlatList
-                            data={this.state.userPost}
-                            keyExtractor={(item) => item.id.toString()}
-                            renderItem={({ item }) =>
-                                <View>  <Posteo borrarPosteo={(idPosteo) => this.borrarPosteo(idPosteo)} post={item} />  </View>}
-                        />
-                        :
-                        <Text>Este usuario no tiene posteos</Text>
-                }
+
+                <Text style={styles.title}>Mi Perfil</Text>
+                {usuario ? (
+                    <>
+                        <Text style={styles.text}>Nombre usuario:{usuario.name}</Text>
+
+                        <Text style={styles.text}>{usuario.miniBio}</Text>
+                        <Text style={styles.text}>Email: {usuario.owner}</Text>
+                        <Text style={styles.text}> {usuario.fotoPerfil}</Text>
+                        <Text style={styles.text}>Cantidad de posteos: {userPost.length}</Text>
+
+
+                      
+                    </>
+                ) : (
+                    <Text>Cargando...</Text>
+                )}
+                {userPost.length > 0 ? (
+                    <FlatList
+                        data={userPost}
+                        keyExtractor={(item) => item.id.toString()}
+                        renderItem={({ item }) => (
+                            <View>
+                                <Posteo borrarPosteo={(idPosteo) => this.borrarPosteo(idPosteo)} post={item} navigation= {this.props.navigation} />
+                            </View>
+                        )}
+                    />
+                ) : (
+                    <Text>Este usuario no tiene posteos</Text>
+                )}
                 <TouchableOpacity style={styles.button} onPress={() => this.logout()}>
                     <Text style={styles.buttonText}>LOGOUT</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => (this.deletearUsuario())(this.props.navigation.navigate("home"))}>
+                <TouchableOpacity style={styles.button} onPress={() => this.deletearUsuario(this.state.idUsuario)}>
                     <Text style={styles.buttonText}>DELETE PROFILE</Text>
                 </TouchableOpacity>
             </View>
@@ -99,24 +129,19 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgb(146, 205, 147)',
         padding: 20,
     },
-    img: {
-        height: 70,
+    img:{
+        alignSelf: "center",        
         width: 70,
+        marginBottom: 20, 
+        height: 70,
+       
+
+},
+    profileImage: {
+        height: 100,
+        width: 100,
+        borderRadius: 50,
         marginBottom: 20,
-    },
-    postItem: {
-        backgroundColor: 'white',
-        padding: 10,
-        marginVertical: 5,
-        borderRadius: 5,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
     },
     button: {
         backgroundColor: '#93CD93',
@@ -146,6 +171,34 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
     },
+    text: {
+        backgroundColor: 'rgb(146, 205, 147)',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 5,
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+  
+    },
+    profileText: {
+        backgroundColor: 'rgb(146, 205, 147)',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 5,
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+        marginVertical: 5,
+    },
+    title: {
+        color: 'white',
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        alignSelf : "center",
+    },
+    
 });
 
 export default Miperfil;
