@@ -8,7 +8,7 @@ class Buscador extends Component {
         this.state = {
             valorInput: '',
             usuariosMostrados: [],
-            campoFiltrado: 'name' // Agregar estado para el campo de filtrado
+            campoFiltrado: 'name', 
         };
     }
 
@@ -57,7 +57,7 @@ class Buscador extends Component {
                     value={this.state.valorInput}
                     onChangeText={(text) => this.setState({ valorInput: text })}
                 />
-                {usuariosMostrados.length === 0 ? (
+                {usuariosEncontrados.length === 0 ? (
                     <Text>No hay usuarios que coincidan con tu búsqueda</Text>
                 ) : (
                     <FlatList

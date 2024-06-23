@@ -50,13 +50,10 @@ class Miperfil extends Component {
     }
 
     deletearUsuario(id) {
-        const user = auth.currentUser;
-
-        // Eliminar los documentos del usuario en la colección 'users'
+        const userDel = auth.currentUser;
         db.collection('users').doc(id).delete()
             .then(() => {
-                // Eliminar el usuario de Firebase Authentication
-                user.delete()
+                userDel.delete()
                     .then(() => {
                         console.log('User deleted.');
                         this.props.navigation.navigate("login");
@@ -80,7 +77,7 @@ class Miperfil extends Component {
                             data={this.state.userPost}
                             keyExtractor={(item) => item.id.toString()}
                             renderItem={({ item }) =>
-                         <View>  <Posteo borrarPosteo={(idPosteo) => this.borrarPosteo(idPosteo)} post={item} />  </View>}
+                                <View>  <Posteo borrarPosteo={(idPosteo) => this.borrarPosteo(idPosteo)} post={item} />  </View>}
                         />
                         :
                         <Text>Este usuario no tiene posteos</Text>
