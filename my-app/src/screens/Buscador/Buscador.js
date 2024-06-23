@@ -45,7 +45,7 @@ class Buscador extends Component {
                     onChangeText={(text) => this.setState({ valorInput: text })}
                 />
 
-                {usuariosEncontrados.length === 0 ?
+                {usuariosMostrados.length === 0 ?
                     
                     <Text> No hay usuarios que coincidan con tu busqueda </Text>
                     :
