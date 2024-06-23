@@ -67,6 +67,7 @@ class Login extends Component {
                 // secureTextEntry = {true}
                 onChangeText = {(text) => this.setState({password:text, error: ''})}
                 value = {this.state.password}
+                secureTextEntry= {true}
                 />
 
                 {/* simil boton de login */}

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image, Modal } from 'react-native';
 import { auth, db } from '../../firebase/config';
-import { getAuth, deleteUser } from "firebase/auth";
 import Posteo from '../../components/Posteo';
 
 class Miperfil extends Component {
@@ -9,6 +8,7 @@ class Miperfil extends Component {
         super();
         this.state = {
             userPost: [],
+            mostrarModal: false,
         };
     }
 
@@ -39,19 +39,16 @@ class Miperfil extends Component {
             });
     }
 
-
     borrarPosteo(idPosteo) {
         db.collection("posteos")
             .doc(idPosteo)
             .delete()
             .then((res) => console.log(res))
             .catch(e => console.log(e))
-
     }
 
-    deletearUsuario(id) {
+    borrarUsuario(id) {
         const user = auth.currentUser;
-
         // Eliminar los documentos del usuario en la colección 'users'
         db.collection('users').doc(id).delete()
             .then(() => {
@@ -59,7 +56,7 @@ class Miperfil extends Component {
                 user.delete()
                     .then(() => {
                         console.log('User deleted.');
-                        this.props.navigation.navigate("login");
+                        this.props.navigation.navigate("register");
                     })
                     .catch((error) => {
                         console.log('Error deleting user:', error);
@@ -68,6 +65,20 @@ class Miperfil extends Component {
             .catch((error) => {
                 console.log('Error deleting user document:', error);
             });
+    }
+
+    // modal
+    mostrarModal() {
+        this.setState({ mostrarModal: true }); 
+    }
+
+    confirmarBorradoModal() {
+        this.setState({ mostrarModal: false });
+        this.borrarUsuario(); 
+    }
+
+    cancelarBorradoModal() {
+        this.setState({ mostrarModal: false });
     }
 
     render() {
@@ -88,9 +99,31 @@ class Miperfil extends Component {
                 <TouchableOpacity style={styles.button} onPress={() => this.logout()}>
                     <Text style={styles.buttonText}>LOGOUT</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={() => (this.deletearUsuario())(this.props.navigation.navigate("home"))}>
+                
+                <TouchableOpacity style={styles.button} onPress={() => (this.mostrarModal())}>
                     <Text style={styles.buttonText}>DELETE PROFILE</Text>
                 </TouchableOpacity>
+
+                <Modal
+                    visible={this.state.mostrarModal}
+                    transparent={true}
+                    animationType="slide"
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalText}>¿Estás seguro de que quieres eliminar tu perfil?</Text>
+                            <View style={styles.modalButtons}>
+                                <TouchableOpacity style={styles.modalButton} onPress={() => this.confirmarBorradoModal()}>
+                                    <Text style={styles.modalButtonText}>Confirmar</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.modalButton} onPress={() => this.cancelarBorradoModal()}>
+                                    <Text style={styles.modalButtonText}>Cancelar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
+
             </View>
         );
     }
@@ -139,13 +172,32 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
     },
-    deleteButton: {
-        backgroundColor: '#FF6961',
-        paddingHorizontal: 10,
-        paddingVertical: 5,
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+    modalText: {
+        fontSize: 18,
+        marginBottom: 20,
+    },
+    modalButtons: {
+        flexDirection: 'row',
+    },
+    modalButton: {
+        backgroundColor: '#93CD93',
+        padding: 10,
+        marginHorizontal: 10,
         borderRadius: 5,
     },
-    deleteButtonText: {
+    modalButtonText: {
         color: 'white',
         fontWeight: 'bold',
     },
