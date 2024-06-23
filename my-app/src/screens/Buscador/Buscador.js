@@ -8,7 +8,7 @@ class Buscador extends Component {
         this.state = {
             valorInput: '',
             usuariosMostrados: [],
-            campoFiltrado: 'name' // Agregar estado para el campo de filtrado
+            campoFiltrado: 'name', 
         };
     }
 

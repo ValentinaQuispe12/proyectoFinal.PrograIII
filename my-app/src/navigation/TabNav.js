@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator()
 export default class TabNav extends Component {
   render() {
     return (
-      <Tab.Navigator>
+      <Tab.Navigator screenOptions={{tabBarShowLabel: false}}>
         <Tab.Screen name='home'     component={StackSecundario}   options={{ headerShown: false, tabBarIcon: ()=> <Entypo name="home"                  size={24} color="#92CD93" /> }} />
         <Tab.Screen name='post'     component={Post}              options={{ headerShown: false, tabBarIcon: ()=> <AntDesign name="camerao"            size={24} color="#92CD93" /> }} />
         <Tab.Screen name='buscador' component={Buscador}          options={{ headerShown: false, tabBarIcon: ()=> <FontAwesome name="search"           size={24} color="#92CD93" /> }} />
