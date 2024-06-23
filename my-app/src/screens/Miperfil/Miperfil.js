@@ -101,10 +101,10 @@ class Miperfil extends Component {
                 <Text style={styles.title}>Mi Perfil</Text>
                 {usuario ? (
                     <>
-                        <Text style={styles.text}>{usuario.name}</Text>
-                        <Text style={styles.text}>{usuario.miniBio}</Text>
-                        {/* <Text style={styles.text}>Email: {usuario.owner}</Text> */}
-                        <Text style={styles.text}> {usuario.fotoPerfil}</Text>
+                        <Image source={{ uri: usuario.fotoPerfil }} style={styles.profileImage} />
+                        <Text style={styles.userName}>{usuario.name}</Text>
+                        <Text style={styles.userBio}>{usuario.miniBio}</Text>
+                        <Text style={styles.userEmail}>Email: {usuario.owner}</Text>
                         <Text style={styles.text}>Cantidad de posteos: {userPost.length}</Text>
                     </>
                 ) : (
@@ -167,8 +167,6 @@ const styles = StyleSheet.create({
         width: 70,
         marginBottom: 20, 
         height: 70,
-       
-
 },
     profileImage: {
         height: 100,
@@ -222,6 +220,21 @@ const styles = StyleSheet.create({
     modalButtonText: {
         color: 'white',
         fontWeight: 'bold',
+    },
+    userName: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    userBio: {
+        fontSize: 16,
+        fontStyle: 'italic',
+        marginBottom: 10,
+    },
+    userEmail: {
+        fontSize: 14,
+        color: '#888',
+        marginBottom: 20,
     },
     text: {
         backgroundColor: 'rgb(146, 205, 147)',

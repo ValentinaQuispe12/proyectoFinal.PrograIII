@@ -82,12 +82,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: 'rgb(146, 205, 147)',
     },
     img: {
         height: 70,
         width: 70,
         marginBottom: 20,
+        alignSelf: "center",        
     },
     profileImage: {
         height: 100,
